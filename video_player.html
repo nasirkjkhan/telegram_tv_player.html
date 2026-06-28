@@ -16,70 +16,221 @@
     --text: #e8e8f5;
     --muted: #6b6b8a;
     --danger: #ef4444;
+    --success: #22c55e;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; height: 100%; overflow: hidden; }
   #app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
+  /* HEADER */
   header {
     display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px 10px;
+    padding: 11px 16px 9px;
     background: var(--surface);
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
   }
-  .logo-icon { font-size: 22px; }
+  .logo-icon { font-size: 20px; }
   .logo-text {
-    font-size: 17px; font-weight: 700;
+    font-size: 16px; font-weight: 700;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-  .live-dot { width: 8px; height: 8px; background: var(--danger); border-radius: 50%; animation: blink 1.4s infinite; }
+  .live-dot { width: 7px; height: 7px; background: var(--danger); border-radius: 50%; animation: blink 1.4s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
   #count-badge { margin-left: auto; font-size: 12px; color: var(--muted); background: var(--card); padding: 3px 10px; border-radius: 20px; border: 1px solid var(--border); }
 
-  #player-section { background: #000; flex-shrink: 0; position: relative; }
-  #main-video { width: 100%; display: none; max-height: 220px; object-fit: contain; background: #000; }
-  #placeholder { height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: var(--muted); font-size: 13px; }
-  #placeholder .big { font-size: 40px; opacity: .3; }
-  #tg-fallback { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 10px; height: 140px; color: var(--muted); font-size: 13px; text-align: center; }
-  #tg-open-btn { background: linear-gradient(135deg,var(--accent),var(--accent2)); color: #fff; border: none; padding: 9px 22px; border-radius: 22px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 4px; }
+  /* HOW IT WORKS BANNER */
+  #how-banner {
+    background: linear-gradient(90deg, rgba(44,165,224,.12), rgba(139,92,246,.12));
+    border-bottom: 1px solid rgba(44,165,224,.2);
+    padding: 9px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  #how-banner span { color: var(--accent); font-weight: 600; }
 
-  #now-bar { display: none; padding: 9px 14px; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0; }
-  #now-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
-  #now-meta { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--muted); }
-  .avatar { width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg,var(--accent),var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
-  .open-tg { margin-left: auto; background: var(--accent); color: #fff; border: none; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; cursor: pointer; text-decoration: none; }
+  /* NOW PLAYING CARD */
+  #now-card {
+    display: none;
+    flex-direction: column;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    overflow: hidden;
+  }
 
-  #list-section { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 10px 12px; }
+  /* Video thumbnail area */
+  #thumb-area {
+    height: 160px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #thumb-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #0a0a20, #1a0a30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .thumb-icon { font-size: 52px; opacity: .25; }
+
+  #watch-btn {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #watch-btn-inner {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #fff;
+    border: none;
+    padding: 13px 32px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 20px rgba(44,165,224,.35);
+    transition: transform .12s, box-shadow .12s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #watch-btn-inner:active { transform: scale(.96); box-shadow: 0 2px 10px rgba(44,165,224,.2); }
+
+  .btn-play-icon { font-size: 18px; }
+  .btn-label { font-size: 15px; }
+
+  #watch-hint {
+    font-size: 11px;
+    color: rgba(255,255,255,.35);
+    text-align: center;
+  }
+
+  /* Now playing info */
+  #now-info {
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #now-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+  }
+
+  #now-text { flex: 1; min-width: 0; }
+  #now-title { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+  #now-meta { font-size: 11px; color: var(--muted); }
+
+  #now-share-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 5px 12px;
+    border-radius: 14px;
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  /* PLAYLIST */
+  #list-section { flex: 1; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; padding: 10px 12px 20px; }
   #list-section::-webkit-scrollbar { display: none; }
-  .sec-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; padding: 0 4px 8px; }
+  .sec-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .8px; text-transform: uppercase; padding: 0 4px 8px; }
 
-  .vcard { display: flex; gap: 10px; padding: 9px; border-radius: 12px; cursor: pointer; transition: background .12s; border: 1px solid transparent; margin-bottom: 7px; align-items: center; }
-  .vcard:active { background: var(--card); transform: scale(.98); }
+  .vcard {
+    display: flex; gap: 10px; padding: 9px 10px;
+    border-radius: 12px; cursor: pointer;
+    transition: background .1s, transform .1s;
+    border: 1px solid transparent;
+    margin-bottom: 6px; align-items: center;
+  }
+  .vcard:active { transform: scale(.98); }
   .vcard:hover  { background: var(--card); border-color: var(--border); }
-  .vcard.active { background: linear-gradient(135deg,rgba(44,165,224,.13),rgba(139,92,246,.13)); border-color: var(--accent); }
-  .thumb { width: 72px; height: 46px; background: var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; position: relative; overflow: hidden; }
-  .thumb-ov { position: absolute; inset: 0; background: rgba(0,0,0,.45); display: flex; align-items: center; justify-content: center; font-size: 15px; opacity: 0; transition: opacity .15s; }
-  .vcard.active .thumb-ov, .vcard:hover .thumb-ov { opacity: 1; }
-  .cinfo { flex: 1; min-width: 0; }
-  .ctitle { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); margin-bottom: 4px; }
-  .vcard.active .ctitle { color: var(--accent); }
-  .cmeta { display: flex; gap: 7px; font-size: 11px; color: var(--muted); align-items: center; }
-  .badge { background: var(--border); padding: 1px 5px; border-radius: 4px; font-size: 10px; }
-  .vcard.active .badge { background: rgba(44,165,224,.2); color: var(--accent); }
+  .vcard.active {
+    background: linear-gradient(135deg,rgba(44,165,224,.13),rgba(139,92,246,.13));
+    border-color: var(--accent);
+  }
 
-  #empty { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; text-align: center; color: var(--muted); gap: 12px; }
+  .vthumb {
+    width: 70px; height: 46px;
+    background: var(--border); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; position: relative; overflow: hidden;
+  }
+  .vthumb-ov {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; opacity: 0; transition: opacity .12s;
+  }
+  .vcard.active .vthumb-ov, .vcard:hover .vthumb-ov { opacity: 1; }
+  .vcard.active .vthumb { border: 1px solid var(--accent); }
+
+  .vinfo { flex: 1; min-width: 0; }
+  .vtitle { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text); margin-bottom: 3px; }
+  .vcard.active .vtitle { color: var(--accent); }
+  .vmeta { display: flex; gap: 6px; font-size: 11px; color: var(--muted); align-items: center; flex-wrap: wrap; }
+  .vbadge { background: var(--border); padding: 1px 5px; border-radius: 4px; font-size: 10px; }
+  .vcard.active .vbadge { background: rgba(44,165,224,.2); color: var(--accent); }
+
+  /* STATES */
+  #empty-state {
+    display: none; flex-direction: column; align-items: center;
+    justify-content: center; padding: 50px 20px;
+    text-align: center; color: var(--muted); gap: 12px;
+  }
   .empty-icon { font-size: 44px; opacity: .3; }
   .empty-text { font-size: 14px; line-height: 1.6; }
 
-  #loading { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 50px 20px; gap: 14px; color: var(--muted); }
-  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .75s linear infinite; }
+  #loading-state {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 50px 20px; gap: 14px; color: var(--muted);
+  }
+  .spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .75s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  #toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--success); color: #fff;
+    padding: 8px 20px; border-radius: 20px;
+    font-size: 13px; font-weight: 600;
+    opacity: 0; transition: opacity .3s;
+    pointer-events: none; white-space: nowrap;
+    z-index: 999;
+  }
+  #toast.show { opacity: 1; }
 </style>
 </head>
 <body>
 <div id="app">
+
   <header>
     <span class="logo-icon">📺</span>
     <span class="logo-text">Telegram TV</span>
@@ -87,184 +238,214 @@
     <div id="count-badge">Loading…</div>
   </header>
 
-  <div id="player-section">
-    <div id="placeholder"><div class="big">🎬</div><span>Loading…</span></div>
-    <video id="main-video" controls playsinline webkit-playsinline onerror="onVErr()"></video>
-    <div id="tg-fallback">
-      <span>📱 Open this video in Telegram to watch it</span>
-      <a id="tg-open-btn" href="#" target="_blank">▶ Watch in Telegram</a>
+  <div id="how-banner">
+    📌 Tap a video → click <span>▶ Watch Now</span> → video sent to you in Telegram
+  </div>
+
+  <!-- NOW PLAYING CARD -->
+  <div id="now-card">
+    <div id="thumb-area">
+      <div id="thumb-bg">
+        <div class="thumb-icon">🎬</div>
+      </div>
+      <div id="watch-btn">
+        <button id="watch-btn-inner" onclick="openInTelegram()">
+          <span class="btn-play-icon">▶</span>
+          <span class="btn-label">Watch Now</span>
+        </button>
+        <div id="watch-hint">Opens video directly in this chat</div>
+      </div>
+    </div>
+    <div id="now-info">
+      <div id="now-avatar">?</div>
+      <div id="now-text">
+        <div id="now-title">—</div>
+        <div id="now-meta">Select a video to watch</div>
+      </div>
+      <a id="now-share-btn" href="#" onclick="shareVideo(event)">🔗 Share</a>
     </div>
   </div>
 
-  <div id="now-bar">
-    <div id="now-title">—</div>
-    <div id="now-meta">
-      <div class="avatar" id="now-av">?</div>
-      <span id="now-who">—</span>
-      <span id="now-views">0 views</span>
-      <a class="open-tg" id="now-link" href="#" target="_blank">↗ Telegram</a>
-    </div>
-  </div>
-
+  <!-- LIST -->
   <div id="list-section">
-    <div id="loading"><div class="spinner"></div><span>Loading videos…</span></div>
-    <div id="empty"><div class="empty-icon">📭</div><div class="empty-text">No videos yet.<br>Upload a video via the bot!</div></div>
+    <div id="loading-state"><div class="spinner"></div><span>Loading videos…</span></div>
+    <div id="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No videos yet.<br>Upload a video via the bot!</div></div>
     <div class="sec-label" id="sec-label" style="display:none">📋 All Videos</div>
     <div id="playlist"></div>
   </div>
+
 </div>
 
-<script>
-// ── Telegram WebApp init ──
-try { if(window.Telegram&&Telegram.WebApp){ Telegram.WebApp.ready(); Telegram.WebApp.expand(); } } catch(e){}
+<div id="toast">✅ Link copied!</div>
 
-// ══════════════════════════════════════════════════
-//  DATA SOURCE — reads from URL param "data" (base64 JSON)
-//  OR from URL param "hook" (webhook fetch fallback)
-// ══════════════════════════════════════════════════
+<script>
+// ── Telegram WebApp ──
+let tgApp = null;
+try {
+  if (window.Telegram && Telegram.WebApp) {
+    tgApp = Telegram.WebApp;
+    tgApp.ready();
+    tgApp.expand();
+  }
+} catch(e) {}
+
 let videos = [];
 let curIdx = -1;
+let curLink = "";
 
-async function init() {
+// ══════════════════════════════
+//  LOAD DATA from ?data= param
+// ══════════════════════════════
+function init() {
   const p = new URLSearchParams(location.search);
-
-  // PRIMARY: data is pre-embedded as base64 in URL
   const b64 = p.get("data");
-  if (b64) {
-    try {
-      const json = JSON.parse(atob(b64));
-      videos = (json.videos || []);
-      render();
-      return;
-    } catch(e) { console.error("base64 parse error", e); }
+
+  if (!b64) {
+    showEmpty("No video data. Re-run /generate_player_url in your bot.");
+    return;
   }
 
-  // FALLBACK: try fetching from hook URL (with CORS proxy)
-  const hook = p.get("hook");
-  if (hook) {
-    try {
-      let txt = null;
-      // Try direct
-      try {
-        const r = await fetch(hook, {method:"GET"});
-        txt = await r.text();
-      } catch(e) {
-        // CORS proxy
-        const pr = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(hook));
-        const pj = await pr.json();
-        txt = pj.contents || "";
-      }
-      const data = parseAny(txt);
-      if (data && data.videos) { videos = data.videos; render(); return; }
-    } catch(e) { console.error("hook fetch error", e); }
-  }
-
-  // Neither worked
-  showEmpty();
-}
-
-function parseAny(txt) {
-  if (!txt) return null;
-  txt = txt.trim();
-  try { return JSON.parse(txt); } catch(e) {}
   try {
-    return JSON.parse(txt.replace(/'/g,'"').replace(/\bTrue\b/g,"true").replace(/\bFalse\b/g,"false").replace(/\bNone\b/g,"null"));
-  } catch(e) {}
-  return null;
+    const json = JSON.parse(atob(b64));
+    videos = json.videos || [];
+  } catch(e) {
+    showEmpty("Failed to parse video data. Re-run /generate_player_url.");
+    return;
+  }
+
+  document.getElementById("loading-state").style.display = "none";
+  document.getElementById("count-badge").textContent = videos.length + " video" + (videos.length !== 1 ? "s" : "");
+
+  if (videos.length === 0) { showEmpty("No videos yet. Upload a video via the bot!"); return; }
+
+  document.getElementById("sec-label").style.display = "block";
+  renderPlaylist();
+  selectVideo(0); // auto-select first
 }
 
-// ══════════════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════════════
-function render() {
-  document.getElementById("loading").style.display = "none";
-  if (videos.length === 0) { showEmpty(); return; }
-
-  document.getElementById("count-badge").textContent = videos.length + " video" + (videos.length!==1?"s":"");
-  document.getElementById("sec-label").style.display = "block";
-
+// ══════════════════════════════
+//  RENDER PLAYLIST
+// ══════════════════════════════
+function renderPlaylist() {
   const list = document.getElementById("playlist");
   list.innerHTML = "";
-  videos.forEach((v,i) => {
-    const title = v.caption || ("Video #"+(i+1));
-    const who   = v.first_name || "Unknown";
-    const init  = who.charAt(0).toUpperCase();
-    const views = v.downloads || 0;
+
+  videos.forEach((v, i) => {
+    const title   = v.caption || ("Video #" + (i + 1));
+    const who     = v.first_name || "Unknown";
+    const initial = who.charAt(0).toUpperCase();
+    const views   = v.downloads || 0;
+
     const d = document.createElement("div");
-    d.className = "vcard"; d.id = "c"+i; d.onclick = ()=>play(i);
-    d.innerHTML = `<div class="thumb">🎬<div class="thumb-ov">▶</div></div>
-      <div class="cinfo">
-        <div class="ctitle">${esc(title)}</div>
-        <div class="cmeta">
-          <div class="avatar" style="width:15px;height:15px;font-size:8px">${esc(init)}</div>
-          <span>${esc(who.split(" ")[0])}</span>
-          <span class="badge">video</span>
-          <span>↓${views}</span>
+    d.className = "vcard";
+    d.id = "c" + i;
+    d.onclick = () => selectVideo(i);
+    d.innerHTML = `
+      <div class="vthumb">🎬<div class="vthumb-ov">▶</div></div>
+      <div class="vinfo">
+        <div class="vtitle">${esc(title)}</div>
+        <div class="vmeta">
+          <span>${esc(initial + ". " + who.split(" ")[0])}</span>
+          <span class="vbadge">video</span>
+          <span>↓ ${views}</span>
         </div>
       </div>`;
     list.appendChild(d);
   });
-
-  if (videos.length > 0) play(0);
 }
 
-function showEmpty() {
-  document.getElementById("loading").style.display = "none";
-  document.getElementById("empty").style.display   = "flex";
-  document.getElementById("placeholder").style.display = "none";
-  document.getElementById("count-badge").textContent = "0 videos";
-}
-
-// ══════════════════════════════════════════════════
-//  PLAY
-// ══════════════════════════════════════════════════
-function play(idx) {
-  if (idx<0||idx>=videos.length) return;
+// ══════════════════════════════
+//  SELECT VIDEO (highlight only, don't auto-open)
+// ══════════════════════════════
+function selectVideo(idx) {
+  if (idx < 0 || idx >= videos.length) return;
   curIdx = idx;
   const v = videos[idx];
 
-  document.querySelectorAll(".vcard").forEach((c,i)=>c.classList.toggle("active",i===idx));
-  const ac = document.getElementById("c"+idx);
-  if (ac) ac.scrollIntoView({block:"nearest",behavior:"smooth"});
+  // Update active card
+  document.querySelectorAll(".vcard").forEach((c, i) => c.classList.toggle("active", i === idx));
+  const ac = document.getElementById("c" + idx);
+  if (ac) ac.scrollIntoView({ block: "nearest", behavior: "smooth" });
 
-  const title = v.caption || ("Video #"+(idx+1));
-  const who   = v.first_name || "Unknown";
-  const link  = v.link || "#";
+  const title   = v.caption || ("Video #" + (idx + 1));
+  const who     = v.first_name || "Unknown";
+  const initial = who.charAt(0).toUpperCase();
+  const views   = v.downloads || 0;
+  curLink       = v.link || "#";
 
-  document.getElementById("now-bar").style.display = "block";
-  document.getElementById("now-title").textContent = title;
-  document.getElementById("now-who").textContent   = who;
-  document.getElementById("now-av").textContent    = who.charAt(0).toUpperCase();
-  document.getElementById("now-views").textContent = (v.downloads||0)+" views";
-  document.getElementById("now-link").href         = link;
-  document.getElementById("tg-open-btn").href      = link;
+  // Show now-card
+  document.getElementById("now-card").style.display = "flex";
+  document.getElementById("now-title").textContent  = title;
+  document.getElementById("now-meta").textContent   = who + " · " + views + " views";
+  document.getElementById("now-avatar").textContent = initial;
+  document.getElementById("now-share-btn").href     = curLink;
+}
 
-  document.getElementById("placeholder").style.display = "none";
+// ══════════════════════════════
+//  OPEN IN TELEGRAM
+//  Uses Telegram WebApp openLink to open bot deep link
+//  This triggers /start?file_key which makes bot send the video
+// ══════════════════════════════
+function openInTelegram() {
+  if (!curLink || curLink === "#") return;
 
-  if (v.file_url) {
-    showVideoEl(v.file_url);
+  if (tgApp) {
+    // Use Telegram WebApp native method — keeps user in Telegram
+    try {
+      // openTelegramLink opens a t.me link natively inside Telegram
+      tgApp.openTelegramLink(curLink);
+      return;
+    } catch(e) {}
+
+    // Fallback: openLink
+    try {
+      tgApp.openLink(curLink);
+      return;
+    } catch(e) {}
+  }
+
+  // Last fallback: open in new tab
+  window.open(curLink, "_blank");
+}
+
+// ══════════════════════════════
+//  SHARE VIDEO
+// ══════════════════════════════
+function shareVideo(e) {
+  e.preventDefault();
+  if (!curLink || curLink === "#") return;
+
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(curLink).then(() => showToast("✅ Link copied!"));
   } else {
-    // No direct URL — show Telegram open button
-    showFallback();
+    // Fallback copy
+    const ta = document.createElement("textarea");
+    ta.value = curLink;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    showToast("✅ Link copied!");
   }
 }
 
-function showVideoEl(src) {
-  document.getElementById("tg-fallback").style.display = "none";
-  const vid = document.getElementById("main-video");
-  vid.style.display = "block";
-  vid.src = src; vid.load();
-  vid.play().catch(()=>showFallback());
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 2500);
 }
 
-function showFallback() {
-  document.getElementById("main-video").style.display  = "none";
-  document.getElementById("tg-fallback").style.display = "flex";
+function showEmpty(msg) {
+  document.getElementById("loading-state").style.display = "none";
+  document.getElementById("empty-state").style.display   = "flex";
+  document.getElementById("empty-state").querySelector(".empty-text").textContent = msg;
+  document.getElementById("count-badge").textContent = "0 videos";
 }
 
-function onVErr() { showFallback(); }
-
-function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function esc(s) {
+  return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
 
 window.addEventListener("DOMContentLoaded", init);
 </script>
